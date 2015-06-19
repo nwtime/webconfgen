@@ -23,4 +23,6 @@ setup(
     url='http://github.com/nwtime/webconfgen',
     # GETTING-STARTED: define required django version:
     install_requires=PACKAGES,
+    packages=find_packages(),
+    include_package_data=True,
 )
