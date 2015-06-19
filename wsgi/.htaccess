@@ -1,0 +1,4 @@
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_URI} !(.*)/$
+RewriteRule ^(.*)([^/])$ https://%{HTTP_HOST}/$1$2/api/ [L,R=302]
+
