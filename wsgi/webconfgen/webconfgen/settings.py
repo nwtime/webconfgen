@@ -15,7 +15,6 @@ import os
 import urlparse
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OPENSHIFT_REPO_DIR = os.environ['OPENSHIFT_REPO_DIR']
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -135,8 +134,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
+OPENSHIFT_REPO_DIR = os.environ.get('OPENSHIFT_REPO_DIR', BASE_DIR)
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(OPENSHIFT_REPO_DIR, "wsgi/static")
+STATIC_ROOT = os.path.join(OPENSHIFT_REPO_DIR, "wsgi/static") 
+# I doubt that 'wsgi/static' would be os compatible. 
+# But then again, I doubt RHEL servers would be using windows anytime soon.
 STATICFILE_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
@@ -145,6 +147,8 @@ STATICFILE_DIRS = (
 
 # webconfgen specific settings
 
+OPENSHIFT_PYTHON_LOG_DIR = os.environ.get('OPENSHIFT_PYTHON_LOG_DIR', '/tmp/')
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -152,7 +156,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/tmp/django-debug.log',
+            'filename': os.path.join(OPENSHIFT_PYTHON_LOG_DIR, 'django-debug.log'),
             },
         },
     'loggers': {
