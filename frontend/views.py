@@ -1,10 +1,13 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, renderers
+from rest_framework.response import Response
+from rest_framework.decorators import detail_route
 from .models import Snippet, Upload, Version
 from .serializers import UserSerializer, UploadSerializer, SnippetSerializer, VersionSerializer
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from .tasks import parser_enqueue
+
 
 # Create your views here.
 
@@ -18,6 +21,11 @@ class SnippetViewSet(viewsets.ModelViewSet):
     permission_classes = (
         permissions.DjangoModelPermissionsOrAnonReadOnly,
     )
+
+    @detail_route(renderer_classes=[renderers.StaticHTMLRenderer])
+    def raw(self, request, *args, **kwargs):
+        snippet = self.get_object()
+        return Response(snippet.get_raw(), content_type='text/plain; charset=utf8')
 
     def perform_create(self, serializer):
         serializer.save(snippets_owner=self.request.user)
@@ -57,10 +65,12 @@ class UploadViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(uploads_owner=self.request.user)
-        parser_enqueue.delay(serializer.data)
+        upload = self.get_object()
+        parser_enqueue.delay(upload.id)
 
     def perform_update(self, serializer):
-        parser_enqueue.delay(serializer.data)
+        upload = self.get_object()
+        parser_enqueue.delay(upload.id)
 
 
 @require_http_methods(["GET"])

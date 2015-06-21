@@ -6,9 +6,16 @@
 
 
 from django.db import models
-import uuid
+from uuid import uuid4
+from textwrap import TextWrapper
 
 # Create your models here.
+
+COMMENT_TEXT_WRAPPER = TextWrapper(
+    initial_indent="# ",
+    subsequent_indent="# ",
+    break_long_words=False,
+)
 
 UPLOADS_STATUS_CHOICES = (
     ('AW', 'Awaiting Processing'),
@@ -57,7 +64,7 @@ class Upload(models.Model):
     uploads_uuid = models.UUIDField(
         unique=True,
         editable=False,
-        default=uuid.uuid4
+        default=uuid4
     )
     uploads_output_file_uri = models.URLField(
         blank=True,
@@ -84,10 +91,9 @@ class Upload(models.Model):
 
 
 class Snippet(models.Model):
+    """
 
-    def __unicode__(self):
-        return u'%s' % (self.snippets_name)
-
+    """
     snippets_name = models.CharField(
         max_length=255,
     )
@@ -113,3 +119,9 @@ class Snippet(models.Model):
         choices=SNIPPET_TYPE_CHOICES,
         default='MI',
     )
+
+    def __unicode__(self):
+        return u'%s' % (self.snippets_name)
+
+    def get_raw(self):
+        return u'%s\n%s' % (COMMENT_TEXT_WRAPPER.fill(self.snippets_helper_text), self.snippets_file_text)
