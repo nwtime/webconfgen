@@ -18,7 +18,7 @@ class GroupSerializer(serializers.ModelSerializer):
 class VersionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Version
-        fields = ('versions_version', 'url', 'id')
+        fields = ('versions_version', 'url')
 
 
 class UploadSerializer(serializers.ModelSerializer):
@@ -33,7 +33,7 @@ class UploadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Upload
-        fields = ('uploads_owner', 'uploads_output_file_uri', 'uploads_status', 'uploads_input_string', 'uploads_version', 'url', 'id')
+        fields = ('uploads_owner', 'uploads_output_file_uri', 'uploads_status', 'uploads_input_string', 'uploads_version', 'url')
 
 
 class SnippetSerializer(serializers.ModelSerializer):
@@ -55,4 +55,4 @@ class SnippetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Snippet
-        fields = ('snippets_name', 'snippets_file_text', 'snippets_mutually_exclusive', 'snippets_version', 'snippets_helper_text', 'url', 'snippets_owner', 'id')
+        fields = ('snippets_name', 'snippets_file_text', 'snippets_mutually_exclusive', 'snippets_version', 'snippets_helper_text', 'url', 'snippets_owner')
