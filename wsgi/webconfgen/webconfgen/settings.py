@@ -20,10 +20,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '7*=oejfw1zzt8w27%-yughzy55f394(=8wl3mv(#6r^dsj^xxd'
+SECRET_KEY = os.environ.get('OPENSHIFT_SECRET_TOKEN', None)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ.get('DEBUG', False)
 
 ALLOWED_HOSTS = [
     '.webconfgen-parthkolekar.rhcloud.com',
@@ -90,7 +90,7 @@ DATABASES = {}
 if 'OPENSHIFT_MYSQL_DB_URL' in os.environ:
     url = urlparse.urlparse(os.environ.get('OPENSHIFT_MYSQL_DB_URL'))
     DATABASES['default'] = {
-        'ENGINE' : 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': os.environ['OPENSHIFT_APP_NAME'],
         'USER': url.username,
         'PASSWORD': url.password,
@@ -100,7 +100,7 @@ if 'OPENSHIFT_MYSQL_DB_URL' in os.environ:
 elif 'OPENSHIFT_POSTGRESQL_DB_URL' in os.environ:
     url = urlparse.urlparse(os.environ.get('OPENSHIFT_POSTGRESQL_DB_URL'))
     DATABASES['default'] = {
-        'ENGINE' : 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.environ['OPENSHIFT_APP_NAME'],
         'USER': url.username,
         'PASSWORD': url.password,
@@ -136,8 +136,8 @@ USE_TZ = True
 
 OPENSHIFT_REPO_DIR = os.environ.get('OPENSHIFT_REPO_DIR', BASE_DIR)
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(OPENSHIFT_REPO_DIR, "wsgi/static") 
-# I doubt that 'wsgi/static' would be os compatible. 
+STATIC_ROOT = os.path.join(OPENSHIFT_REPO_DIR, "wsgi/static")
+# I doubt that 'wsgi/static' would be os compatible.
 # But then again, I doubt RHEL servers would be using windows anytime soon.
 STATICFILE_DIRS = (
     os.path.join(BASE_DIR, 'static'),
@@ -172,10 +172,7 @@ LOGGING = {
 
 # celery settings
 
-if 'CLOUDAMQP_URI' in os.environ:
-    BROKER_URL = os.environ['CLOUDAMQP_URI']
-else:
-    BROKER_URL = 'redis://localhost:6379/0'
+BROKER_URL = os.environ.get('CLOUDAMQP_URI', 'redis://localhost:6379/0')
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'

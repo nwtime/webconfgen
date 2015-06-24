@@ -1,27 +1,39 @@
 #!/usr/bin/env python
+"""
+It is a convention among django developers to place a requirements.txt
+in the root of their projects and to run the pip command to install it.
+Openshift python cartridge allows for install of the requirements in two
+ways.
+
+The first method is via the requirements.txt file. Anything placed there
+will get automatically installed on the openshift application virtualenv.
+
+In addition to this, openshift mandates the use of this setup.py to install
+the django-project. The install_requires setup option will in addition,
+install any other packages which are needed by the application.
+
+With this double approach, it made the most sense to employ the both for
+a different purpose.
+
+The setup.py install_requires reads from the django-project 'BASE_DIR'
+and imports the requirements from the requirements.txt there.
+"""
 
 from setuptools import setup, find_packages
 import os
 
 OPENSHIFT_REPO_DIR = os.environ.get('OPENSHIFT_REPO_DIR', os.path.dirname(os.path.abspath(__file__)))
 
-with open (os.path.join(OPENSHIFT_REPO_DIR, 'requirements.txt')) as requirements:
+with open(os.path.join(OPENSHIFT_REPO_DIR, 'wsgi/myproject/requirements.txt')) as requirements:
     PACKAGES = requirements.readlines()
 
 setup(
-    # GETTING-STARTED: set your app name:
     name='webconfgen',
-    # GETTING-STARTED: set your app version:
-    version='0.1.0',
-    # GETTING-STARTED: set your app description:
+    version='0.1.1',
     description='A web based ntp.conf generator',
-    # GETTING-STARTED: set author name (your name):
     author='Parth Laxmikant Kolekar',
-    # GETTING-STARTED: set author email (your email):
     author_email='parth.kolekar@students.iiit.ac.in',
-    # GETTING-STARTED: set author url (your url):
     url='http://github.com/nwtime/webconfgen',
-    # GETTING-STARTED: define required django version:
     install_requires=PACKAGES,
     packages=find_packages(),
     include_package_data=True,

@@ -1,13 +1,25 @@
-amqp==1.4.6
-anyjson==0.3.3
-billiard==3.3.0.20
-celery==3.1.18
-Django==1.8.2
-django-celery==3.1.16
-djangorestframework==3.1.3
-ipython==3.1.0
-kombu==3.0.26
-psycopg2==2.6.1
-pytz==2015.4
-redis==2.10.3
-uuid==1.30
+# It is a convention among django developers to place a requirements.txt
+# in the root of their projects and to run the pip command to install it.
+# Openshift python cartridge allows for install of the requirements in two
+# ways.
+
+# The first method is via this requirements.txt file. Anything placed here
+# will get automatically installed on the openshift application virtualenv
+
+# In addition to this, openshift mandates the use of a setup.py to install
+# the django-project. The install_requires setup option will in addition,
+# install any other packages which are needed by the application.
+
+# With this double approach, it made the most sense to employ the both for
+# a different purpose.
+
+# This text file is proposed to be used as a 'globally' required set of
+# python goodies which you would like to have installed on the server, but
+# is not a direct dependency of the application.
+
+ipython
+isort
+lfm
+pyclean
+todotxt-machine
+ttop

@@ -1,3 +1,6 @@
+Static Content
+==============
+
 Public, static content goes here.  Users can create rewrite rules to link to
 content in the static dir.  For example, django commonly uses /media/
 directories for static content.  For example in a .htaccess file in a
@@ -10,3 +13,5 @@ Then copy the media/* content to yourapp/wsgi/static/media/ and it should
 just work.
 
 Note: The ^application/ part of the URI match is required.
+
+The project is configured to dump static contents here.
