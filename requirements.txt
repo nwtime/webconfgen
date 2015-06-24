@@ -20,6 +20,5 @@
 ipython
 isort
 lfm
-pyclean
 todotxt-machine
 ttop

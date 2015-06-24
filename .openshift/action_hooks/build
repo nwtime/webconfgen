@@ -1,0 +1,6 @@
+#!/bin/bash
+
+source ${OPENSHIFT_PYTHON_DIR}/virtenv/bin/activate
+
+echo "Executing 'python $OPENSHIFT_REPO_DIR/wsgi/webconfgen/manage.py test --noinput'"
+python "$OPENSHIFT_REPO_DIR"wsgi/webconfgen/manage.py test --noinput

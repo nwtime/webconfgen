@@ -24,7 +24,7 @@ import os
 
 OPENSHIFT_REPO_DIR = os.environ.get('OPENSHIFT_REPO_DIR', os.path.dirname(os.path.abspath(__file__)))
 
-with open(os.path.join(OPENSHIFT_REPO_DIR, 'wsgi/myproject/requirements.txt')) as requirements:
+with open(os.path.join(OPENSHIFT_REPO_DIR, 'wsgi/webconfgen/requirements.txt')) as requirements:
     PACKAGES = requirements.readlines()
 
 setup(
