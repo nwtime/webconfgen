@@ -145,6 +145,13 @@ STATICFILE_DIRS = (
 
 # Django-Rest-Framework settings
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+    ),
+    'PAGINATE_BY': 10,
+}
+
 # webconfgen specific settings
 
 OPENSHIFT_PYTHON_LOG_DIR = os.environ.get('OPENSHIFT_PYTHON_LOG_DIR', '/tmp/')
