@@ -20,6 +20,4 @@ urlpatterns = patterns(
 
     url(r'^type-generate/', views.type_generate, name="type-generate-detail"),
     url(r'^type-parse/', views.type_parse, name="type-parse-detail"),
-    url(r'^type-generate-combine/', views.type_generate_combine, name="type-generate-combine-detail"),
-
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

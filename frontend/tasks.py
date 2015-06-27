@@ -14,11 +14,10 @@ def test(param):
 
 
 @app.task()
-def parser_enqueue(param):
-    id = param.get('id', None)
+def parser_enqueue(id):
     if id:
         item = Upload.objects.filter(pk=id)[0]
         item.uploads_status = 'PR'
         item.save()
     else:
-        return "Failed"
+        return "Called without argument"
