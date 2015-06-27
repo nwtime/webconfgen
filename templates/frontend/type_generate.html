@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% block title_block %} 
-	Type Generator
+    Type Generator
 {% endblock title_block %}
 
 
@@ -15,32 +15,30 @@
 {% verbatim %}
 <div flex layout="column" tabIndex="-1" role="main" class="md-whiteframe-z2" ng-controller="SnippetsController as ul">
 
-	<md-toolbar layout="row" class="md-whiteframe-z1">
-		<h1>ntp.conf generator</h1>
-	</md-toolbar>
+    <md-toolbar layout="row" class="md-whiteframe-z1">
+        <h1>ntp.conf generator</h1>
+    </md-toolbar>
 
     <md-content flex id="content">
-    	<md-chips ng-model="ul.selectedSnippets" md-autocomplete-snap md-require-match>
-      	<md-autocomplete
-          	md-search-text="ul.searchText"
-          	md-items="item in ul.getMatches(ul.searchText)"
-        	md-item-text="item.name"
-        	ng-keyup="ul.checkRefreshContent(ul.selectedSnippets)"
-        	ng-click="ul.checkRefreshContent(ul.selectedSnippets)"
-    	    placeholder="Add some Snippets">
-	        <span md-highlight-text="ul.searchText">{{item.name}} :: {{item.description}}</span>
-      	</md-autocomplete>
-      	<md-chip-template>
-        	<span>
-        	  <strong>{{$chip.name}}</strong>
-    	      <em>({{$chip.description}})</em>
-	        </span>
-      	</md-chip-template>
-    	</md-chips>
+        <md-chips ng-model="ul.selectedSnippets" md-autocomplete-snap md-require-match>
+        <md-autocomplete
+            md-search-text="ul.searchText"
+            md-items="item in ul.getMatches(ul.searchText)"
+            md-item-text="item.name"
+            ng-keyup="ul.checkRefreshContent(ul.selectedSnippets)"
+            ng-click="ul.checkRefreshContent(ul.selectedSnippets)"
+            placeholder="Add some Snippets">
+            <span md-highlight-text="ul.searchText">{{item.name}} :: {{item.description}}</span>
+        </md-autocomplete>
+        <md-chip-template>
+            <span>
+              <strong>{{$chip.name}}</strong>
+              <em>({{$chip.description}})</em>
+            </span>
+        </md-chip-template>
+        </md-chips>
 
-    	<pre>
-    		{{ul.content}}
-    	</pre>
+        <div id='editor' style="width: 100%; height: 100%"></div>
 
     </md-content>
  
@@ -50,6 +48,12 @@
 
 
 {% block script_block %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.9/ace.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.getSession().setMode("ace/mode/plain_text");
+</script>
 <script src=" {% static "frontend/js/snippets/Snippets.js" %} "></script>
 <script src=" {% static "frontend/js/snippets/SnippetsController.js" %} "></script>
 <script src=" {% static "frontend/js/snippets/SnippetsService.js" %} "></script>

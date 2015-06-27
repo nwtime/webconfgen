@@ -31,6 +31,7 @@
                 for (var i = selectedSnippets.length - 1; i >= 0; i--) {
                     SnippetsService.loadRawSnippet(selectedSnippets[i]).then(function(rawSnippet) {
                         self.content += '\r\n\r\n' + rawSnippet;
+                        editor.setValue(self.content);
                     });
             }
         }
