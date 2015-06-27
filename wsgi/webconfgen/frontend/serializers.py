@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from .models import Snippet, Upload, Version
 
 
@@ -9,50 +9,104 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('url', 'username', 'email')
 
 
-class GroupSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Group
-        fields = ('url', 'name')
-
-
 class VersionSerializer(serializers.ModelSerializer):
+    version = serializers.CharField(
+        source='versions_version',
+    )
+
     class Meta:
         model = Version
-        fields = ('versions_version', 'url')
+        fields = ('version', 'url')
 
 
 class UploadSerializer(serializers.ModelSerializer):
-    uploads_owner = serializers.HyperlinkedRelatedField(
+    owner = serializers.HyperlinkedRelatedField(
+        source='uploads_owner',
         view_name='user-detail',
         read_only=True,
     )
-    uploads_version = serializers.HyperlinkedRelatedField(
+    version = serializers.HyperlinkedRelatedField(
+        source='uploads_version',
         view_name='version-detail',
-        queryset=Version.objects.all()
+        queryset=Version.objects.all(),
+    )
+    input_file_url = serializers.URLField(
+        source='uploads_input_file_url',
+        read_only=True,
+    )
+    output_file_url = serializers.URLField(
+        source='uploads_output_file_url',
+        read_only=True,
+    )
+    input_string = serializers.CharField(
+        source='uploads_input_string',
+    )
+    status = serializers.CharField(
+        source='uploads_status',
+        read_only=True,
     )
 
     class Meta:
         model = Upload
-        fields = ('uploads_owner', 'uploads_output_file_uri', 'uploads_status', 'uploads_input_string', 'uploads_version', 'url')
+        fields = ('owner', 'output_file_uri', 'status', 'input_file_url', 'input_string', 'version', 'url')
 
 
-class SnippetSerializer(serializers.ModelSerializer):
-    snippets_owner = serializers.HyperlinkedRelatedField(
-        view_name='user-detail',
-        read_only=True,
+class SnippetAllSerializer(serializers.ModelSerializer):
+    description = serializers.CharField(
+        source='snippets_description',
     )
-
-    snippets_mutually_exclusive = serializers.HyperlinkedRelatedField(
+    mutually_exclusive = serializers.HyperlinkedRelatedField(
+        source='snippets_mutually_exclusive',
         many=True,
         view_name='snippet-detail',
-        queryset=Snippet.objects.all()
+        queryset=Snippet.objects.all(),
     )
-    snippets_version = serializers.HyperlinkedRelatedField(
+    version = serializers.HyperlinkedRelatedField(
+        source='snippets_version',
         many=True,
         view_name='version-detail',
-        queryset=Version.objects.all()
+        queryset=Version.objects.all(),
+    )
+    name = serializers.CharField(
+        source='snippets_name',
     )
 
     class Meta:
         model = Snippet
-        fields = ('snippets_name', 'snippets_file_text', 'snippets_mutually_exclusive', 'snippets_version', 'snippets_helper_text', 'url', 'snippets_owner')
+        fields = ('name', 'description', 'version', 'url', 'mutually_exclusive')
+
+
+class SnippetSerializer(serializers.ModelSerializer):
+    owner = serializers.HyperlinkedRelatedField(
+        source='snippets_owner',
+        view_name='user-detail',
+        read_only=True,
+    )
+    description = serializers.CharField(
+        source='snippets_description',
+    )
+    file_text = serializers.CharField(
+        source='snippets_file_text'
+    )
+    helper_text = serializers.CharField(
+        source='snippets_helper_text',
+    )
+    mutually_exclusive = serializers.HyperlinkedRelatedField(
+        source='snippets_mutually_exclusive',
+        many=True,
+        view_name='snippet-detail',
+        queryset=Snippet.objects.all(),
+    )
+    version = serializers.HyperlinkedRelatedField(
+        source='snippets_version',
+        many=True,
+        view_name='version-detail',
+        queryset=Version.objects.all(),
+    )
+    name = serializers.CharField(
+        source='snippets_name',
+    )
+
+    class Meta:
+        model = Snippet
+        fields = ('name', 'file_text', 'mutually_exclusive', 'version', 'helper_text', 'url', 'owner', 'description')

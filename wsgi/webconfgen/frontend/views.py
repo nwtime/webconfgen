@@ -1,8 +1,8 @@
 from rest_framework import viewsets, permissions, renderers
 from rest_framework.response import Response
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import detail_route, list_route
 from .models import Snippet, Upload, Version
-from .serializers import UserSerializer, UploadSerializer, SnippetSerializer, VersionSerializer
+from .serializers import UserSerializer, UploadSerializer, SnippetSerializer, VersionSerializer, SnippetAllSerializer
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
@@ -30,6 +30,18 @@ class SnippetViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(snippets_owner=self.request.user)
 
+    @list_route(renderer_classes=[renderers.JSONRenderer, renderers.BrowsableAPIRenderer])
+    def all(self, request, *args, **kwargs):
+        snippets = Snippet.objects.all()
+        serializer = SnippetAllSerializer(
+            snippets,
+            many=True,
+            context={
+                'request': request
+            },
+        )
+        return Response(serializer.data)
+
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -49,7 +61,7 @@ class VersionViewSet(viewsets.ModelViewSet):
     queryset = Version.objects.all()
     serializer_class = VersionSerializer
     permission_classes = (
-        permissions.IsAdminUser,
+        permissions.DjangoModelPermissionsOrAnonReadOnly,
     )
 
 
@@ -64,25 +76,19 @@ class UploadViewSet(viewsets.ModelViewSet):
     )
 
     def perform_create(self, serializer):
-        serializer.save(uploads_owner=self.request.user)
-        upload = self.get_object()
+        upload = serializer.save(uploads_owner=self.request.user)
         parser_enqueue.delay(upload.id)
 
     def perform_update(self, serializer):
-        upload = self.get_object()
+        upload = serializer.save()
         parser_enqueue.delay(upload.id)
 
 
 @require_http_methods(["GET"])
 def type_generate(request):
-    return render(request, 'frontend/type_gen.html', {})
+    return render(request, 'frontend/type_generate.html', {})
 
 
 @require_http_methods(["GET"])
 def type_parse(request):
-    return render(request, 'frontend/type_parse.html', {})
-
-
-@require_http_methods(["GET", "POST"])
-def type_generate_combine(request):
     return render(request, 'frontend/type_parse.html', {})

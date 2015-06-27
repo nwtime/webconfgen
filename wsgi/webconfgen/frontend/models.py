@@ -12,8 +12,8 @@ from textwrap import TextWrapper
 # Create your models here.
 
 COMMENT_TEXT_WRAPPER = TextWrapper(
-    initial_indent="# ",
-    subsequent_indent="# ",
+    initial_indent='# ',
+    subsequent_indent='# ',
     break_long_words=False,
 )
 
@@ -22,13 +22,6 @@ UPLOADS_STATUS_CHOICES = (
     ('PR', 'Processing'),
     ('RE', 'Ready'),
     ('ER', 'Errorred'),
-)
-
-SNIPPET_TYPE_CHOICES = (
-    ('OS', 'Operating System'),
-    ('ST', 'Statistics'),
-    ('AU', 'Authentication'),
-    ('MI', 'Miscellaneous'),
 )
 
 
@@ -66,12 +59,12 @@ class Upload(models.Model):
         editable=False,
         default=uuid4
     )
-    uploads_output_file_uri = models.URLField(
+    uploads_output_file_url = models.URLField(
         blank=True,
         null=True,
         editable=False,
     )
-    uploads_output_file = models.FileField(
+    uploads_input_file_url = models.URLField(
         blank=True,
         null=True,
         editable=False,
@@ -97,6 +90,10 @@ class Snippet(models.Model):
     snippets_name = models.CharField(
         max_length=255,
     )
+    snippets_description = models.CharField(
+        max_length=255,
+        default='',
+    )
     snippets_file_text = models.TextField()
     snippets_owner = models.ForeignKey(
         'auth.user',
@@ -113,11 +110,6 @@ class Snippet(models.Model):
     snippets_version = models.ManyToManyField(
         Version,
         symmetrical=False,
-    )
-    snippets_type = models.CharField(
-        max_length=2,
-        choices=SNIPPET_TYPE_CHOICES,
-        default='MI',
     )
 
     def __unicode__(self):

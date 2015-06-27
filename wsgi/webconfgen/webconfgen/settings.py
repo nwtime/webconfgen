@@ -44,7 +44,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'rest_framework',
     'frontend',
-    'djcelery',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -139,6 +138,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(OPENSHIFT_REPO_DIR, "wsgi/static")
 # I doubt that 'wsgi/static' would be os compatible.
 # But then again, I doubt RHEL servers would be using windows anytime soon.
+
 STATICFILE_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )

@@ -1,17 +1,39 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
-  	<meta charset="utf-8">
-	{% block head_block %}
-	{% endblock head_block %}
-	<title>
-	{% block title_block %}
-	{% endblock title_block %}
-	</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
+    {% block head_block %}
+    {% endblock head_block %}
+    <title>
+    {% block title_block %}
+    {% endblock title_block %}
+    </title>
   </head>
-  <body>
-	{% block script_block %}
-	{% endblock script_block %}
+  <body ng-app="webconfgen" layout="row">
+    {% block content_block %}
+    {% endblock content_block %}
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.js"></script>
+    {% block script_block %}
+    {% endblock script_block %}
+    <script type="text/javascript">
+    angular
+        .module('webconfgen', ['ngMaterial', 'snippets'])
+        .config(function($mdThemingProvider){
+            $mdThemingProvider.theme('default')
+                .primaryPalette('brown')
+                .accentPalette('red');
+        });
+    </script>
   </body>
 </html>
 
