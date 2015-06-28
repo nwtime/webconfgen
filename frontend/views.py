@@ -9,9 +9,6 @@ from django.views.decorators.http import require_http_methods
 from .tasks import parser_enqueue
 
 
-# Create your views here.
-
-
 class SnippetViewSet(viewsets.ModelViewSet):
     """
         Provides API access for Snippets
