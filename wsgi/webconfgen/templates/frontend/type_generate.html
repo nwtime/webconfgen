@@ -2,46 +2,80 @@
 {% load staticfiles %}
 
 {% block title_block %} 
-	Type Generator
+    Type Generator
 {% endblock title_block %}
 
 
 {% block head_block %} 
 <link rel="stylesheet" href="{% static 'frontend/css/main.css' %}">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 {% endblock head_block %}
 
 
 {% block content_block %}
 {% verbatim %}
-<div flex layout="column" tabIndex="-1" role="main" class="md-whiteframe-z2" ng-controller="SnippetsController as ul">
+<div flex layout="column" tabIndex="-1" role="main" class="md-whiteframe-z2" ng-controller="SnippetsController as gn">
 
-	<md-toolbar layout="row" class="md-whiteframe-z1">
-		<h1>ntp.conf generator</h1>
-	</md-toolbar>
+    <md-toolbar layout="column" class="md-whiteframe-z1">
+        
+        <h1 class="md-margin">
+            ntp.conf generator
+        </h1>
+        <div class="md-toolbar-tools">
+            <h2>
+                Generate / Create Your Configuration Here
+            </h2>
+        </div>
+        
+    </md-toolbar>
 
-    <md-content flex id="content">
-    	<md-chips ng-model="ul.selectedSnippets" md-autocomplete-snap md-require-match>
-      	<md-autocomplete
-          	md-search-text="ul.searchText"
-          	md-items="item in ul.getMatches(ul.searchText)"
-        	md-item-text="item.name"
-        	ng-keyup="ul.checkRefreshContent(ul.selectedSnippets)"
-        	ng-click="ul.checkRefreshContent(ul.selectedSnippets)"
-    	    placeholder="Add some Snippets">
-	        <span md-highlight-text="ul.searchText">{{item.name}} :: {{item.description}}</span>
-      	</md-autocomplete>
-      	<md-chip-template>
-        	<span>
-        	  <strong>{{$chip.name}}</strong>
-    	      <em>({{$chip.description}})</em>
-	        </span>
-      	</md-chip-template>
-    	</md-chips>
+    <md-content flex layout="column">
+        <md-tabs md-selected="gn.selectedTab" md-stretch-tabs="auto" flex>
+            <md-tab>
+                <md-tab-label>
+                    Editor
+                </md-tab-label>
+                <md-tab-body>
+                    <div id="editor" style="height: 100%; width: 100%;"></div>
+                </md-tab-body> 
+            </md-tab>
 
-    	<pre>
-    		{{ul.content}}
-    	</pre>
+            <md-tab>
+                <md-tab-label>
+                    Generate
+                </md-tab-label>
+                <md-tab-body>
+                    <md-chips ng-model="gn.selectedSnippets" md-autocomplete-snap md-require-match>
+                        <md-autocomplete
+                            md-search-text="gn.searchText"
+                            md-items="item in gn.getMatches(gn.searchText)"
+                            md-item-text="item.name"
+                            ng-keyup="gn.checkRefreshContent(gn.selectedSnippets)"
+                            ng-click="gn.checkRefreshContent(gn.selectedSnippets)"
+                            placeholder="Add some Snippets">
+                            <span md-highlight-text="gn.searchText">{{item.name}} :: {{item.description}}</span>
+                        </md-autocomplete>
+                        <md-chip-template>
+                            <span>
+                            <strong>{{$chip.name}}</strong>
+                            <em>({{$chip.description}})</em>
+                            </span>
+                        </md-chip-template>
+                    </md-chips>
+                </md-tab-body>
+            </md-tab>
 
+        </md-tabs>
+
+        <md-toolbar flex layout="row" style="max-height: 44px;" >
+            <span flex></span>
+            <md-button aria-label="Download">
+                Download
+            </md-button>
+            <md-button aria-label="Parse">
+                Send for Parse
+            </md-button>
+        </md-toolbar>
     </md-content>
  
   </div>
@@ -50,6 +84,7 @@
 
 
 {% block script_block %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.9/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src=" {% static "frontend/js/snippets/Snippets.js" %} "></script>
 <script src=" {% static "frontend/js/snippets/SnippetsController.js" %} "></script>
 <script src=" {% static "frontend/js/snippets/SnippetsService.js" %} "></script>

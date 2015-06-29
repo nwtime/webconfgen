@@ -2,15 +2,15 @@
     'use strict';
     angular.module('snippets')
         .controller('SnippetsController', [
-            'SnippetsService', '$log', '$q',
+            'SnippetsService', '$log', '$q', '$mdBottomSheet',
             SnippetsController
         ]);
-    function SnippetsController(SnippetsService, $log, $q) {
+    function SnippetsController(SnippetsService, $log, $q, $mdBottomSheet) {
         var self = this;
+        self.selectedTab = 1;
         self.searchText = null;
         self.selectedSnippets = [];
         self.content = '';
-        self.item = null;
         self.checkRefreshContent = checkRefreshContent;
         self.getMatches = getMatches;
         self.snippetHash = hashToString(JSON.stringify(self.selectedSnippets));
@@ -19,6 +19,11 @@
                 .then(function(snippets) {
                     self.snippets = [].concat(snippets);
                 });
+        function loadEditor() {
+            self.editor = ace.edit('editor');
+            self.editor.setTheme('ace/theme/chrome');
+            self.editor.getSession().setMode('ace/mode/plain_text');
+        }
         function checkRefreshContent(selectedSnippets) {
             var currentHash = hashToString(JSON.stringify(self.selectedSnippets));
             if (currentHash != self.snippetHash) {
@@ -31,6 +36,7 @@
                 for (var i = selectedSnippets.length - 1; i >= 0; i--) {
                     SnippetsService.loadRawSnippet(selectedSnippets[i]).then(function(rawSnippet) {
                         self.content += '\r\n\r\n' + rawSnippet;
+                        self.editor.setValue(self.content);
                     });
             }
         }
@@ -49,5 +55,6 @@
                 return a & a;
             },0);
         }
+        angular.element(document).ready(loadEditor);
     };
 })();
