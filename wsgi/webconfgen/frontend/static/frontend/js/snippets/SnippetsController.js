@@ -7,12 +7,14 @@
         ]);
     function SnippetsController(SnippetsService, $log, $q, $mdBottomSheet) {
         var self = this;
-        self.selectedTab = 1;
+        self.selectedTab = 0;
         self.searchText = null;
         self.selectedSnippets = [];
         self.content = '';
         self.checkRefreshContent = checkRefreshContent;
         self.getMatches = getMatches;
+        self.fileImport = fileImport;
+        self.fileRaw = fileRaw;
         self.snippetHash = hashToString(JSON.stringify(self.selectedSnippets));
         SnippetsService
             .loadAllSnippets()
@@ -54,6 +56,23 @@
                 a = ((a << 5) - a) + b.charCodeAt(0);
                 return a & a;
             },0);
+        }
+        function fileImport(element) {
+            var file = element.files[0];
+            self.selectedTab = 1;
+            var fileReader = new FileReader();
+            fileReader.onload = function(event) {
+                var content = event.target.result;
+                self.editor.setValue(content);
+                self.content = content;
+            };
+            fileReader.readAsText(file);
+        }
+        function fileRaw() {
+            var code = self.editor.getValue();
+            var blob = new Blob([code], {type: 'text/plain'});
+            var url = URL.createObjectURL(blob);
+            window.open(url, '_blank');
         }
         angular.element(document).ready(loadEditor);
     };

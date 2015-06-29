@@ -14,7 +14,7 @@
 
 {% block content_block %}
 {% verbatim %}
-<div flex layout="column" tabIndex="-1" role="main" class="md-whiteframe-z2" ng-controller="SnippetsController as gn">
+<div flex layout="column" tabIndex="-1" role="main" class="md-whiteframe-z2" ng-controller="SnippetsController as sc">
 
     <md-toolbar layout="column" class="md-whiteframe-z1">
         
@@ -30,7 +30,7 @@
     </md-toolbar>
 
     <md-content flex layout="column">
-        <md-tabs md-selected="gn.selectedTab" md-stretch-tabs="auto" flex>
+        <md-tabs md-selected="sc.selectedTab" md-stretch-tabs="auto" flex>
             <md-tab>
                 <md-tab-label>
                     Editor
@@ -45,15 +45,15 @@
                     Generate
                 </md-tab-label>
                 <md-tab-body>
-                    <md-chips ng-model="gn.selectedSnippets" md-autocomplete-snap md-require-match>
+                    <md-chips ng-model="sc.selectedSnippets" md-autocomplete-snap md-require-match>
                         <md-autocomplete
-                            md-search-text="gn.searchText"
-                            md-items="item in gn.getMatches(gn.searchText)"
+                            md-search-text="sc.searchText"
+                            md-items="item in sc.getMatches(sc.searchText)"
                             md-item-text="item.name"
-                            ng-keyup="gn.checkRefreshContent(gn.selectedSnippets)"
-                            ng-click="gn.checkRefreshContent(gn.selectedSnippets)"
+                            ng-keyup="sc.checkRefreshContent(sc.selectedSnippets)"
+                            ng-click="sc.checkRefreshContent(sc.selectedSnippets)"
                             placeholder="Add some Snippets">
-                            <span md-highlight-text="gn.searchText">{{item.name}} :: {{item.description}}</span>
+                            <span md-highlight-text="sc.searchText">{{item.name}} :: {{item.description}}</span>
                         </md-autocomplete>
                         <md-chip-template>
                             <span>
@@ -68,8 +68,15 @@
         </md-tabs>
 
         <md-toolbar flex layout="row" style="max-height: 44px;" >
+            <div class="md-button md-default-theme">
+                <md-button aria-label="Import">
+                    Import
+                </md-button>
+                <input type="file" style="position: absolute; top: 0px; right: 0px; margin: 0; padding: 0; cursor: pointer; opacity: 0; filter: alpha(opacity=0); height: 100%; width: 100%; z-index: 10000" onchange="angular.element(this).scope().sc.fileImport(this)" />
+            </div>
+            
             <span flex></span>
-            <md-button aria-label="Download">
+            <md-button aria-label="Download" ng-click="sc.fileRaw()">
                 Download
             </md-button>
             <md-button aria-label="Parse">
