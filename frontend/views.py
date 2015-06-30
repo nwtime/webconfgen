@@ -71,6 +71,7 @@ class UploadViewSet(viewsets.ModelViewSet):
     permission_classes = (
         permissions.DjangoModelPermissionsOrAnonReadOnly,
     )
+    lookup_field = 'uploads_uuid'
 
     def perform_create(self, serializer):
         upload = serializer.save(uploads_owner=self.request.user)
