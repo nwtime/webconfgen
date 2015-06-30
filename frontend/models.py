@@ -111,6 +111,11 @@ class Snippet(models.Model):
         Version,
         symmetrical=False,
     )
+    snippets_uuid = models.UUIDField(
+        unique=True,
+        editable=False,
+        default=uuid4
+    )
 
     def __unicode__(self):
         return u'%s' % (self.snippets_name)

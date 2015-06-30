@@ -15,9 +15,7 @@
 {% block content_block %}
 {% verbatim %}
 <div flex layout="column" tabIndex="-1" role="main" class="md-whiteframe-z2" ng-controller="SnippetsController as sc">
-
     <md-toolbar layout="column" class="md-whiteframe-z1">
-        
         <h1 class="md-margin">
             ntp.conf generator
         </h1>
@@ -25,8 +23,13 @@
             <h2>
                 Generate / Create Your Configuration Here
             </h2>
+            <span flex></span>
+            <md-select ng-model="sc.selectedVersion" placeholder="Choose Version" aria-label="Version">
+                <md-option ng-value="ver" ng-repeat="ver in sc.versions">
+                    {{ver.version}}
+                </md-option>
+            </md-select>
         </div>
-        
     </md-toolbar>
 
     <md-content flex layout="column">
