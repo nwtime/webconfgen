@@ -25,9 +25,9 @@ class UploadSerializer(serializers.ModelSerializer):
         view_name='user-detail',
         read_only=True,
     )
-    version = serializers.HyperlinkedRelatedField(
+    version = serializers.SlugRelatedField(
+        slug_field='versions_version',
         source='uploads_version',
-        view_name='version-detail',
         queryset=Version.objects.all(),
     )
     input_file_url = serializers.URLField(
@@ -49,31 +49,37 @@ class UploadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Upload
         fields = ('owner', 'output_file_url', 'status', 'input_file_url', 'input_string', 'version', 'url')
+        lookup_field = 'uploads_uuid'
 
 
 class SnippetAllSerializer(serializers.ModelSerializer):
     description = serializers.CharField(
         source='snippets_description',
     )
-    mutually_exclusive = serializers.HyperlinkedRelatedField(
-        source='snippets_mutually_exclusive',
-        many=True,
-        view_name='snippet-detail',
-        queryset=Snippet.objects.all(),
-    )
-    version = serializers.HyperlinkedRelatedField(
+    version = serializers.SlugRelatedField(
+        slug_field='versions_version',
         source='snippets_version',
         many=True,
-        view_name='version-detail',
         queryset=Version.objects.all(),
+    )
+    mutually_exclusive = serializers.SlugRelatedField(
+        slug_field='snippets_uuid',
+        source='snippets_mutually_exclusive',
+        many=True,
+        queryset=Snippet.objects.all(),
     )
     name = serializers.CharField(
         source='snippets_name',
     )
+    uuid = serializers.UUIDField(
+        source='snippets_uuid',
+        read_only=True,
+    )
 
     class Meta:
         model = Snippet
-        fields = ('name', 'description', 'version', 'url', 'mutually_exclusive')
+        lookup_field = 'snippets_uuid'
+        fields = ('name', 'description', 'version', 'url', 'mutually_exclusive', 'uuid')
 
 
 class SnippetSerializer(serializers.ModelSerializer):
@@ -91,22 +97,27 @@ class SnippetSerializer(serializers.ModelSerializer):
     helper_text = serializers.CharField(
         source='snippets_helper_text',
     )
-    mutually_exclusive = serializers.HyperlinkedRelatedField(
-        source='snippets_mutually_exclusive',
-        many=True,
-        view_name='snippet-detail',
-        queryset=Snippet.objects.all(),
-    )
-    version = serializers.HyperlinkedRelatedField(
+    version = serializers.SlugRelatedField(
+        slug_field='versions_version',
         source='snippets_version',
         many=True,
-        view_name='version-detail',
         queryset=Version.objects.all(),
+    )
+    mutually_exclusive = serializers.SlugRelatedField(
+        slug_field='snippets_uuid',
+        source='snippets_mutually_exclusive',
+        many=True,
+        queryset=Snippet.objects.all(),
     )
     name = serializers.CharField(
         source='snippets_name',
     )
+    uuid = serializers.UUIDField(
+        source='snippets_uuid',
+        read_only=True,
+    )
 
     class Meta:
         model = Snippet
-        fields = ('name', 'file_text', 'mutually_exclusive', 'version', 'helper_text', 'url', 'owner', 'description')
+        lookup_field = 'snippets_uuid'
+        fields = ('name', 'file_text', 'mutually_exclusive', 'version', 'helper_text', 'url', 'owner', 'description', 'uuid')

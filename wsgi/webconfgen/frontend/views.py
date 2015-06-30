@@ -18,6 +18,7 @@ class SnippetViewSet(viewsets.ModelViewSet):
     permission_classes = (
         permissions.DjangoModelPermissionsOrAnonReadOnly,
     )
+    lookup_field = 'snippets_uuid'
 
     @detail_route(renderer_classes=[renderers.StaticHTMLRenderer])
     def raw(self, request, *args, **kwargs):
@@ -27,7 +28,7 @@ class SnippetViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(snippets_owner=self.request.user)
 
-    @list_route(renderer_classes=[renderers.JSONRenderer, renderers.BrowsableAPIRenderer])
+    @list_route()
     def all(self, request, *args, **kwargs):
         snippets = Snippet.objects.all()
         serializer = SnippetAllSerializer(
@@ -61,6 +62,18 @@ class VersionViewSet(viewsets.ModelViewSet):
         permissions.DjangoModelPermissionsOrAnonReadOnly,
     )
 
+    @list_route()
+    def all(self, request, *args, **kwargs):
+        versions = Version.objects.all()
+        serializer = VersionSerializer(
+            versions,
+            many=True,
+            context={
+                'request': request
+            }
+        )
+        return Response(serializer.data)
+
 
 class UploadViewSet(viewsets.ModelViewSet):
     """
@@ -71,6 +84,7 @@ class UploadViewSet(viewsets.ModelViewSet):
     permission_classes = (
         permissions.DjangoModelPermissionsOrAnonReadOnly,
     )
+    lookup_field = 'uploads_uuid'
 
     def perform_create(self, serializer):
         upload = serializer.save(uploads_owner=self.request.user)

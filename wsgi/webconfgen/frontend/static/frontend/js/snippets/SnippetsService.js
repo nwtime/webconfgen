@@ -20,6 +20,16 @@
                 }).then(function(response) {
                     return response.data;
                 });
+            },
+            loadAllVersions: function() {
+                return $http.get('/api/versions/all', {
+                    cache: true
+                }).then(function(response) {
+                    return response.data;
+                });
+            },
+            postForParse: function(content) {
+                return $http.post();
             }
         };
     };

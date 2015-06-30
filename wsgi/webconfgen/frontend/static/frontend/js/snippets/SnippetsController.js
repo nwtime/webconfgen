@@ -11,6 +11,7 @@
         self.searchText = null;
         self.selectedSnippets = [];
         self.content = '';
+        self.selectedVersion = null;
         self.checkRefreshContent = checkRefreshContent;
         self.getMatches = getMatches;
         self.fileImport = fileImport;
@@ -20,6 +21,11 @@
             .loadAllSnippets()
                 .then(function(snippets) {
                     self.snippets = [].concat(snippets);
+                });
+        SnippetsService
+            .loadAllVersions()
+                .then(function(versions) {
+                    self.versions = [].concat(versions);
                 });
         function loadEditor() {
             self.editor = ace.edit('editor');
@@ -36,20 +42,34 @@
         function refreshContent(selectedSnippets) {
             self.content = '';
                 for (var i = selectedSnippets.length - 1; i >= 0; i--) {
-                    SnippetsService.loadRawSnippet(selectedSnippets[i]).then(function(rawSnippet) {
-                        self.content += '\r\n\r\n' + rawSnippet;
-                        self.editor.setValue(self.content);
-                    });
+                    SnippetsService.loadRawSnippet(selectedSnippets[i])
+                        .then(function(rawSnippet) {
+                            self.content += '\r\n\r\n' + rawSnippet;
+                            self.editor.setValue(self.content);
+                        });
             }
         }
         function createFilterFor(query) {
             var lowercaseQuery = angular.lowercase(query);
             return function(element) {
-                return angular.lowercase(element.name).indexOf(lowercaseQuery) === 0;
+                if (!self.selectedVersion) {
+                    return true;
+                }
+                var lowercaseElement = angular.lowercase(element.name);
+                var selectedVersion = self.selectedVersion.version;
+                if (element.version.indexOf(selectedVersion) === 0) {
+                    return lowercaseElement.indexOf(lowercaseQuery) === 0;
+                } else {
+                    return false;
+                }
             };
         }
         function getMatches(query) {
-            return query ? self.snippets.filter(createFilterFor(query)) : self.snippets;
+            if (query) {
+                return self.snippets.filter(createFilterFor(query));
+            } else {
+                return self.snippets;
+            }
         }
         function hashToString(s) {
             return s.split('').reduce(function(a, b) {
