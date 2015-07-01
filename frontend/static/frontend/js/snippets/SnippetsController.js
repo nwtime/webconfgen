@@ -2,10 +2,10 @@
     'use strict';
     angular.module('snippets')
         .controller('SnippetsController', [
-            'SnippetsService', '$log', '$q', '$mdBottomSheet',
+            'SnippetsService', '$log', '$q',
             SnippetsController
         ]);
-    function SnippetsController(SnippetsService, $log, $q, $mdBottomSheet) {
+    function SnippetsController(SnippetsService, $log, $q) {
         var self = this;
         self.selectedTab = 0;
         self.searchText = null;
@@ -16,16 +16,17 @@
         self.getMatches = getMatches;
         self.fileImport = fileImport;
         self.fileRaw = fileRaw;
+        self.mutex_list = [];
         self.snippetHash = hashToString(JSON.stringify(self.selectedSnippets));
         SnippetsService
             .loadAllSnippets()
-                .then(function(snippets) {
-                    self.snippets = [].concat(snippets);
+                .then(function(response) {
+                    self.snippets = [].concat(response.data);
                 });
         SnippetsService
             .loadAllVersions()
-                .then(function(versions) {
-                    self.versions = [].concat(versions);
+                .then(function(response) {
+                    self.versions = [].concat(response.data);
                 });
         function loadEditor() {
             self.editor = ace.edit('editor');
@@ -41,21 +42,37 @@
         }
         function refreshContent(selectedSnippets) {
             self.content = '';
-                for (var i = selectedSnippets.length - 1; i >= 0; i--) {
-                    SnippetsService.loadRawSnippet(selectedSnippets[i])
-                        .then(function(rawSnippet) {
-                            self.content += '\r\n\r\n' + rawSnippet;
-                            self.editor.setValue(self.content);
-                        });
+            var warn = false;
+            var promiceList = [];
+            self.mutex_list = [];
+            for (var i = selectedSnippets.length - 1; i >= 0; i--) {
+                var snippet = selectedSnippets[i];
+                promiceList.push(SnippetsService.loadRawSnippet(snippet));
+                self.mutex_list = self.mutex_list.concat(snippet.mutually_exclusive.filter(function(element) {
+                    return self.mutex_list.indexOf(element) < 0;
+                }));
             }
+            $q.all(promiceList)
+                .then(function(responses) {
+                    for (var i = responses.length - 1; i >= 0; i--) {
+                        self.content += responses[i].data + '\r\n\r\n';
+                    }
+                    self.editor.setValue(self.content);
+                });
         }
         function createFilterFor(query) {
             var lowercaseQuery = angular.lowercase(query);
             return function(element) {
-                if (!self.selectedVersion) {
-                    return true;
-                }
                 var lowercaseElement = angular.lowercase(element.name);
+                if (self.selectedVersion === null) {
+                    // $log.debug('showing all because no version selected');
+                    return false;
+                }
+                $log.debug(self.mutex_list);
+                $log.debug(self.mutex_list.indexOf(element.uuid));
+                if (self.mutex_list.indexOf(element.uuid) >= 0) {
+                    return false;
+                }
                 var selectedVersion = self.selectedVersion.version;
                 if (element.version.indexOf(selectedVersion) === 0) {
                     return lowercaseElement.indexOf(lowercaseQuery) === 0;

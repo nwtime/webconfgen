@@ -50,11 +50,13 @@
                 <md-tab-body>
                     <md-chips ng-model="sc.selectedSnippets" md-autocomplete-snap md-require-match>
                         <md-autocomplete
+                            md-no-cache
                             md-search-text="sc.searchText"
                             md-items="item in sc.getMatches(sc.searchText)"
                             md-item-text="item.name"
-                            ng-keyup="sc.checkRefreshContent(sc.selectedSnippets)"
+                            md-search-text-change="sc.checkRefreshContent(sc.selectedSnippets)"
                             ng-click="sc.checkRefreshContent(sc.selectedSnippets)"
+                            ng-keyup="sc.checkRefreshContent(sc.selectedSnippets)"
                             placeholder="Add some Snippets">
                             <span md-highlight-text="sc.searchText">{{item.name}} :: {{item.description}}</span>
                         </md-autocomplete>
