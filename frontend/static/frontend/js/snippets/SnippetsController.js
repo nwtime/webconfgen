@@ -73,7 +73,7 @@
                     return false;
                 }
                 var selectedVersion = self.selectedVersion.version;
-                if (element.version.indexOf(selectedVersion) === 0) {
+                if (element.version.indexOf(selectedVersion) >= 0) {
                     return lowercaseElement.indexOf(lowercaseQuery) === 0;
                 } else {
                     return false;
