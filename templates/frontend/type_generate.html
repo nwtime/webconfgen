@@ -71,9 +71,9 @@
                     <h3>
                         Some form in which content is added
                     </h3>
-                    <md-button ng-click="sc.selectedSnippets = [];">Option 1 (wipe clean)</md-button>
-                    <md-button ng-click="sc.selectedSnippets = sc.snippets">Option 2 (select all)</md-button>
-                    <md-button ng-click="sc.selectedSnippets = [sc.snippets[0]]">Option 3 (select first snippet)</md-button>
+                    <md-button ng-click="sc.selectedSnippets = []; sc.content = '1'; sc.checkRefreshContent([])">Option 1 (wipe clean)</md-button>
+                    <md-button ng-click="sc.selectedSnippets = sc.snippets; sc.content = '2'; sc.checkRefreshContent(sc.snippets)">Option 2 (select all)</md-button>
+                    <md-button ng-click="sc.selectedSnippets = [sc.snippets[0]]; sc.content = '3'; sc.checkRefreshContent([sc.snippets[0]])">Option 3 (select first snippet)</md-button>
                 </md-tab-body>
             </md-tab>
 
