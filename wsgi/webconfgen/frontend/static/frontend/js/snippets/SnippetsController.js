@@ -2,12 +2,12 @@
     'use strict';
     angular.module('snippets')
         .controller('SnippetsController', [
-            'SnippetsService', '$log', '$q',
+            'SnippetsService', '$log', '$q', '$mdToast',
             SnippetsController
         ]);
-    function SnippetsController(SnippetsService, $log, $q) {
+    function SnippetsController(SnippetsService, $log, $q, $mdToast) {
         var self = this;
-        self.selectedTab = 0;
+        self.selectedTab = 1;
         self.searchText = null;
         self.selectedSnippets = [];
         self.content = '';
@@ -18,6 +18,7 @@
         self.fileRaw = fileRaw;
         self.mutex_list = [];
         self.snippetHash = hashToString(JSON.stringify(self.selectedSnippets));
+        self.isToastShown = false;
         SnippetsService
             .loadAllSnippets()
                 .then(function(response) {
@@ -65,11 +66,9 @@
             return function(element) {
                 var lowercaseElement = angular.lowercase(element.name);
                 if (self.selectedVersion === null) {
-                    // $log.debug('showing all because no version selected');
+                    showVersionWarnToast();
                     return false;
                 }
-                $log.debug(self.mutex_list);
-                $log.debug(self.mutex_list.indexOf(element.uuid));
                 if (self.mutex_list.indexOf(element.uuid) >= 0) {
                     return false;
                 }
@@ -80,6 +79,16 @@
                     return false;
                 }
             };
+        }
+        function showVersionWarnToast() {
+            if (self.isToastShown === false) {
+                $mdToast.show(
+                    $mdToast.simple()
+                        .content('Select Version First')
+                        .position('top right')
+                );
+                self.isToastShown = true;
+            }
         }
         function getMatches(query) {
             if (query) {
