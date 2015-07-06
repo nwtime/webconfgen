@@ -57,6 +57,7 @@
                             md-search-text-change="sc.checkRefreshContent(sc.selectedSnippets)"
                             ng-click="sc.checkRefreshContent(sc.selectedSnippets)"
                             ng-keyup="sc.checkRefreshContent(sc.selectedSnippets)"
+                            md-selected-item-change="sc.checkRefreshContent(sc.selectedSnippets)"
                             placeholder="Add some Snippets">
                             <span md-highlight-text="sc.searchText">{{item.name}} :: {{item.description}}</span>
                         </md-autocomplete>
