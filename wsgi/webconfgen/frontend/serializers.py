@@ -45,10 +45,14 @@ class UploadSerializer(serializers.ModelSerializer):
         source='uploads_status',
         read_only=True,
     )
+    uuid = serializers.UUIDField(
+        source='uploads_uuid',
+        read_only=True,
+    )
 
     class Meta:
         model = Upload
-        fields = ('owner', 'output_file_url', 'status', 'input_file_url', 'input_string', 'version', 'url')
+        fields = ('owner', 'output_file_url', 'status', 'input_file_url', 'input_string', 'version', 'url', 'uuid')
         lookup_field = 'uploads_uuid'
 
 

@@ -1,29 +1,35 @@
 (function() {
     'use strict';
-    angular.module('snippets')
-        .service('SnippetsService', [
-            '$http',
-            SnippetsService
+    angular
+        .module('snippets')
+            .service('SnippetsService', [
+                '$http',
+                SnippetsService
         ]);
     function SnippetsService($http) {
         return {
             loadAllSnippets: function() {
-                return $http.get('/api/snippets/all', {
+                return $http.get('/api/snippets/all/', {
                     cache: true
                 });
             },
             loadRawSnippet: function(snippet) {
-                return $http.get(snippet.url + 'raw', {
+                return $http.get(snippet.url + 'raw/', {
                     cache: true
                 });
             },
             loadAllVersions: function() {
-                return $http.get('/api/versions/all', {
+                return $http.get('/api/versions/all/', {
                     cache: true
                 });
             },
-            postForParse: function(content) {
-                return $http.post();
+            postForParse: function(content, version) {
+                return $http.post('/api/uploads/', {
+                    'version': version,
+                    'input_string': content
+                } ,{
+                    cache: true
+                });
             }
         };
     };
