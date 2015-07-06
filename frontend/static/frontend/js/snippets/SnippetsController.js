@@ -1,9 +1,10 @@
 (function() {
     'use strict';
-    angular.module('snippets')
-        .controller('SnippetsController', [
-            'SnippetsService', '$log', '$q', '$mdToast',
-            SnippetsController
+    angular
+        .module('snippets')
+            .controller('SnippetsController', [
+                'SnippetsService', '$log', '$q', '$mdToast',
+                SnippetsController
         ]);
     function SnippetsController(SnippetsService, $log, $q, $mdToast) {
         var self = this;
@@ -16,6 +17,7 @@
         self.getMatches = getMatches;
         self.fileImport = fileImport;
         self.fileRaw = fileRaw;
+        self.fileUpload = fileUpload;
         self.mutex_list = [];
         self.snippetHash = hashToString(JSON.stringify(self.selectedSnippets));
         self.isToastShown = false;
@@ -32,7 +34,9 @@
         function loadEditor() {
             self.editor = ace.edit('editor');
             self.editor.setTheme('ace/theme/chrome');
-            self.editor.getSession().setMode('ace/mode/plain_text');
+            self.editor
+                .getSession()
+                    .setMode('ace/mode/plain_text');
         }
         function checkRefreshContent(selectedSnippets) {
             var currentHash = hashToString(JSON.stringify(self.selectedSnippets));
@@ -66,14 +70,14 @@
             return function(element) {
                 var lowercaseElement = angular.lowercase(element.name);
                 if (self.selectedVersion === null) {
-                    showVersionWarnToast();
+                    // do not set the isToastShown here
+                    showToast('Select Version First');
                     return false;
                 }
                 if (self.mutex_list.indexOf(element.uuid) >= 0) {
                     return false;
                 }
                 var selectedVersion = self.selectedVersion.version;
-                $log.debug(selectedVersion);
                 if (element.version.indexOf(selectedVersion) >= 0) {
                     return lowercaseElement.indexOf(lowercaseQuery) === 0;
                 } else {
@@ -81,12 +85,13 @@
                 }
             };
         }
-        function showVersionWarnToast() {
+        function showToast(content) {
             if (self.isToastShown === false) {
                 $mdToast.show(
                     $mdToast.simple()
-                        .content('Select Version First')
+                        .content(content)
                         .position('top right')
+                        .theme('default')
                 );
                 self.isToastShown = true;
             }
@@ -120,6 +125,26 @@
             var blob = new Blob([code], {type: 'text/plain'});
             var url = URL.createObjectURL(blob);
             window.open(url, '_blank');
+        }
+        function fileUpload() {
+            var content = self.editor.getValue();
+            var version = self.selectedVersion;
+            if (version === null) {
+                self.isToastShown = false;
+                showToast('Select Version First');
+                return;
+            }
+            if (content === '') {
+                self.isToastShown = false;
+                showToast('No Content To Parse');
+                return;
+            }
+            SnippetsService
+                .postForParse(content, version.version)
+                    .then(function(response) {
+                        var uuid = response.data.uuid;
+                        window.location = "/" + uuid;
+                    });
         }
         angular.element(document).ready(loadEditor);
     };

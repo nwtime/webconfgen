@@ -91,7 +91,7 @@
             <md-button aria-label="Download" ng-click="sc.fileRaw()">
                 Download
             </md-button>
-            <md-button aria-label="Parse">
+            <md-button aria-label="Parse" ng-click="sc.fileUpload()">
                 Send for Parse
             </md-button>
         </md-toolbar>
@@ -103,8 +103,8 @@
 
 
 {% block script_block %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.9/ace.js" type="text/javascript" charset="utf-8"></script>
-<script src=" {% static "frontend/js/snippets/Snippets.js" %} "></script>
-<script src=" {% static "frontend/js/snippets/SnippetsController.js" %} "></script>
-<script src=" {% static "frontend/js/snippets/SnippetsService.js" %} "></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.9/ace.js" type="text/javascript" charset="utf-8" defer></script>
+<script src=" {% static "frontend/js/snippets/Snippets.js" %} " defer></script>
+<script src=" {% static "frontend/js/snippets/SnippetsController.js"%}" defer></script>
+<script src=" {% static "frontend/js/snippets/SnippetsService.js" %}" defer></script>
 {% endblock script_block %}
