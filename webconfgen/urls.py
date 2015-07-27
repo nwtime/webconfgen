@@ -18,6 +18,6 @@ urlpatterns = patterns(
     url(r'^api/auth/', include('rest_framework.urls', namespace='rest_framework')),
     url('^admin/', include(admin.site.urls)),
 
-    url(r'^type-generate/', views.type_generate, name="type-generate-detail"),
-    url(r'^type-parse/', views.type_parse, name="type-parse-detail"),
+    url(r'^$', views.type_generate, name="type-generate-detail"),
+    url(r'^[0-9a-fA-F]{8}-?[0-9a-fA-F]{4}-?4[0-9a-fA-F]{3}-?[89abAB][0-9a-fA-F]{3}-?[0-9a-fA-F]{12}/', views.type_parse, name="type-parse-detail"),
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
