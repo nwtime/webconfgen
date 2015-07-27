@@ -143,7 +143,7 @@
                 .postForParse(content, version.version)
                     .then(function(response) {
                         var uuid = response.data.uuid;
-                        window.location = "/" + uuid;
+                        window.location = '/' + uuid;
                     });
         }
         angular.element(document).ready(loadEditor);

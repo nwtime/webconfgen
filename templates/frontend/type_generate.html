@@ -101,4 +101,13 @@
 <script src=" {% static "frontend/js/snippets/Snippets.js" %} " defer></script>
 <script src=" {% static "frontend/js/snippets/SnippetsController.js"%}" defer></script>
 <script src=" {% static "frontend/js/snippets/SnippetsService.js" %}" defer></script>
+<script type="text/javascript" >
+    angular
+        .module('webconfgen', ['ngMaterial', 'snippets'])
+        .config(function($mdThemingProvider){
+            $mdThemingProvider.theme('default')
+                .primaryPalette('blue')
+                .accentPalette('red');
+        });
+</script>
 {% endblock script_block %}
