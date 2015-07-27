@@ -25,15 +25,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.js" defer></script>
     {% block script_block %}
     {% endblock script_block %}
-    <script type="text/javascript" >
-    angular
-        .module('webconfgen', ['ngMaterial', 'snippets'])
-        .config(function($mdThemingProvider){
-            $mdThemingProvider.theme('default')
-                .primaryPalette('blue')
-                .accentPalette('red');
-        });
-    </script>
   </body>
 </html>
 

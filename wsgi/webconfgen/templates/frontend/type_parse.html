@@ -2,17 +2,58 @@
 {% load staticfiles %}
 
 {% block title_block %} 
-	Type Parse
+    Type Parse
 {% endblock %}
 
 
 {% block head_block %} 
 <link rel="stylesheet" href="{% static 'frontend/css/main.css' %}">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 {% endblock %}
 
 
-{% block main_block %}
-{% endblock %}
+{% block content_block %}
+{% verbatim %}
+<div flex layout="column" tabIndex="-1" role="main" class="md-whiteframe-z2" ng-controller="UploadsController as uc">
+    <md-toolbar layout="column" class="md-whiteframe-z1">
+        <h1 class="md-margin">
+            ntp.conf generator
+        </h1>
+        <div class="md-toolbar-tools">
+            <h2>
+                Parse Your Configuration Here
+            </h2>
+            <span flex></span>
+            <div ng-model="uc.upload.version">
+            {{uc.upload.version}}
+            </div>
+        </div>
+    </md-toolbar>
+    <md-content style="height: 100%;">
+        <section style="height: 100%;">
+            <md-subheader class="md-primary md-no-sticky">Input File</md-subheader>
+            <div id="editor_input" style="height: 100%; width: 100%;"></div>
+            <md-subheader class="md-primary md-no-sticky">Output File</md-subheader>
+            <div id="editor_output" style="height: 100%; width: 100%;"></div>
+        </section>
+    </md-content>
+</div>
+{% endverbatim %}
+{% endblock content_block %}
+
 
 {% block script_block %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.9/ace.js" type="text/javascript" charset="utf-8" defer></script>
+<script src=" {% static "frontend/js/uploads/Uploads.js" %} " defer></script>
+<script src=" {% static "frontend/js/uploads/UploadsController.js"%}" defer></script>
+<script src=" {% static "frontend/js/uploads/UploadsService.js" %}" defer></script>
+<script type="text/javascript" >
+    angular
+        .module('webconfgen', ['ngMaterial', 'uploads'])
+        .config(function($mdThemingProvider){
+            $mdThemingProvider.theme('default')
+                .primaryPalette('blue')
+                .accentPalette('red');
+        });
+</script>
 {% endblock script_block %}

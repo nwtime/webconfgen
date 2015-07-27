@@ -97,9 +97,15 @@ class UploadViewSet(viewsets.ModelViewSet):
 
 @require_http_methods(["GET"])
 def type_generate(request):
+    """
+        A function for providing access to the Generate frontend
+    """
     return render(request, 'frontend/type_generate.html', {})
 
 
 @require_http_methods(["GET"])
 def type_parse(request):
+    """
+       A function for providing access to the Parse frontend
+    """
     return render(request, 'frontend/type_parse.html', {})
