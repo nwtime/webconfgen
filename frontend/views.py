@@ -2,7 +2,7 @@ from rest_framework import viewsets, permissions, renderers
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route, list_route
 from .models import Snippet, Upload, Version
-from .serializers import UserSerializer, UploadSerializer, SnippetSerializer, VersionSerializer, SnippetAllSerializer
+from .serializers import UserSerializer, UploadSerializer, SnippetSerializer, VersionSerializer, SnippetAllSerializer, UploadMiniSerializer
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
@@ -93,6 +93,17 @@ class UploadViewSet(viewsets.ModelViewSet):
     def perform_update(self, serializer):
         upload = serializer.save()
         parser_enqueue.delay(upload.id)
+
+    @detail_route()
+    def mini(self, request, uploads_uuid=None):
+        upload = Upload.objects.get(uploads_uuid=uploads_uuid)
+        serializer = UploadMiniSerializer(
+            upload,
+            context={
+                'request': request
+            }
+        )
+        return Response(serializer.data)
 
 
 @require_http_methods(["GET"])
