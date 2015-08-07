@@ -94,6 +94,11 @@ class UploadViewSet(viewsets.ModelViewSet):
         upload = serializer.save()
         parser_enqueue.delay(upload.id)
 
+    @detail_route(renderer_classes=[renderers.StaticHTMLRenderer])
+    def raw(self, request, *args, **kwargs):
+        upload = self.get_object()
+        return Response(upload.get_raw(), content_type='text/plain; charset=utf8')
+
     @detail_route()
     def mini(self, request, uploads_uuid=None):
         upload = Upload.objects.get(uploads_uuid=uploads_uuid)

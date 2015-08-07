@@ -123,6 +123,9 @@ REST_FRAMEWORK = {
     'PAGINATE_BY': 10,
 }
 
+# Handling uploaded media
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media')
+
 # webconfgen specific settings
 
 LOGGING = {

@@ -59,12 +59,12 @@ class Upload(models.Model):
         editable=False,
         default=uuid4
     )
-    uploads_output_file_url = models.URLField(
+    uploads_output_file_url = models.FileField(
         blank=True,
         null=True,
         editable=False,
     )
-    uploads_input_file_url = models.URLField(
+    uploads_input_file_url = models.FileField(
         blank=True,
         null=True,
         editable=False,
@@ -81,6 +81,9 @@ class Upload(models.Model):
 
     def __unicode__(self):
         return "%s - %s - %s" % (self.uploads_owner, self.uploads_uuid, self.uploads_version)
+
+    def get_raw(self):
+        return u'%s' % (self.uploads_input_string)
 
 
 class Snippet(models.Model):
