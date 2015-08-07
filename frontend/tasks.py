@@ -29,5 +29,5 @@ def parser_enqueue(id):
         return "Called without argument"
 
     if upload.uploads_status == "AW":
-        upload.uploads_input_file_url.save(str(upload.uploads_uuid), ContentFile(upload.uploads_input_string), True)
+        upload.uploads_input_file_url.save(str(upload.uploads_uuid) + ".in.conf", ContentFile(upload.uploads_input_string), True)
         return "Saved"
