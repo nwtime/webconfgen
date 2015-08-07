@@ -150,3 +150,6 @@ crashlytics-build.properties
 *~
 .project
 .pydevproject
+
+# webconfgen specific
+media/
