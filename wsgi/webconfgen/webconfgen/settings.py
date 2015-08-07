@@ -154,6 +154,7 @@ REST_FRAMEWORK = {
 
 # Handling uploaded media
 MEDIA_ROOT = os.path.join(OPENSHIFT_REPO_DIR, "wsgi/static/media")
+MEDIA_URL = '/static/media/'
 
 # webconfgen specific settings
 
