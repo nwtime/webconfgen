@@ -8,12 +8,14 @@
         ]);
     function UploadsController(UploadsService, $log, $q) {
         var self = this;
-        var currentUUID = window.location.toString().split('/')[3];
+        self.inputTimeout = null;
+        self.outputTimeout = null;
+        self.uuid = window.location.toString().split('/')[3];
         UploadsService
-            .getUpload(currentUUID)
+            .getUpload(self.uuid)
                 .then(function(response) {
                     self.upload = response.data;
-                    $log.debug(self.upload.version);
+                    $log.debug(self.upload);
                 });
         function loadEditor() {
             self.editorInput = ace.edit('editor_input');

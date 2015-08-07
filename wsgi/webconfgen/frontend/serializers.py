@@ -30,13 +30,15 @@ class UploadSerializer(serializers.ModelSerializer):
         source='uploads_version',
         queryset=Version.objects.all(),
     )
-    input_file_url = serializers.URLField(
+    input_file_url = serializers.FileField(
         source='uploads_input_file_url',
         read_only=True,
+        use_url=True,
     )
-    output_file_url = serializers.URLField(
+    output_file_url = serializers.FileField(
         source='uploads_output_file_url',
         read_only=True,
+        use_url=True,
     )
     input_string = serializers.CharField(
         source='uploads_input_string',
@@ -53,6 +55,37 @@ class UploadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Upload
         fields = ('owner', 'output_file_url', 'status', 'input_file_url', 'input_string', 'version', 'url', 'uuid')
+        lookup_field = 'uploads_uuid'
+
+
+class UploadMiniSerializer(serializers.ModelSerializer):
+    version = serializers.SlugRelatedField(
+        slug_field='versions_version',
+        source='uploads_version',
+        queryset=Version.objects.all(),
+    )
+    input_file_url = serializers.FileField(
+        source='uploads_input_file_url',
+        read_only=True,
+        use_url=True,
+    )
+    output_file_url = serializers.FileField(
+        source='uploads_output_file_url',
+        read_only=True,
+        use_url=True,
+    )
+    status = serializers.CharField(
+        source='uploads_status',
+        read_only=True,
+    )
+    uuid = serializers.UUIDField(
+        source='uploads_uuid',
+        read_only=True,
+    )
+
+    class Meta:
+        model = Upload
+        fields = ('output_file_url', 'status', 'input_file_url', 'version', 'url', 'uuid')
         lookup_field = 'uploads_uuid'
 
 
