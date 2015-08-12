@@ -29,13 +29,42 @@
             </div>
         </div>
     </md-toolbar>
-    <md-content style="height: 100%;">
-        <section style="height: 100%;">
-            <md-subheader class="md-primary md-no-sticky">Input File</md-subheader>
-            <div id="editor_input" style="height: 100%; width: 100%;"></div>
-            <md-subheader class="md-primary md-no-sticky">Output File</md-subheader>
-            <div id="editor_output" style="height: 100%; width: 100%;"></div>
-        </section>
+    <md-content flex layout="column">
+        <md-tabs md-selected="uc.selectedTab" md-stretch-tabs="auto" flex>
+            <md-tab>
+                <md-tab-label>
+                    Input File
+                    <md-progress-linear md-mode="indeterminate" id="progress_input" ng-show="uc.inputLoading"></md-progress-linear>
+                </md-tab-label>
+                <md-tab-body>
+                    <div id="editor_input" style="height: 100%; width: 100%;">
+                        Loading Content
+                    </div>
+                </md-tab-body> 
+            </md-tab>
+            <md-tab>
+                <md-tab-label>
+                    Output File
+                    <md-progress-linear md-mode="indeterminate" id="progress_output" ng-show="uc.outputLoading"></md-progress-linear>
+                </md-tab-label>
+                <md-tab-body>
+                    <div id="editor_output" style="height: 100%; width: 100%;">
+                        Loading Content
+                    </div>
+                </md-tab-body> 
+            </md-tab>
+        </md-tabs>
+    </md-content>
+
+    <md-toolbar flex layout="row" style="max-height: 44px;" >
+            <span flex></span>
+            <md-button ng-show="uc.selectedTab == 1" aria-label="Download" ng-click="uc.fileRaw()">
+                Download
+            </md-button>
+            <md-button ng-show="uc.selectedTab == 0" aria-label="Parse" ng-click="uc.fileUpload()">
+                Parse Again
+            </md-button>
+        </md-toolbar>
     </md-content>
 </div>
 {% endverbatim %}
