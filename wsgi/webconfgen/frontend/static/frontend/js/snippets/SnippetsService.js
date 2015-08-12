@@ -27,8 +27,6 @@
                 return $http.post('/api/uploads/', {
                     'version': version,
                     'input_string': content
-                } ,{
-                    cache: true
                 });
             }
         };

@@ -62,7 +62,7 @@
                     for (var i = responses.length - 1; i >= 0; i--) {
                         self.content += responses[i].data + '\r\n\r\n';
                     }
-                    self.editor.setValue(self.content);
+                    self.editor.setValue(self.content, -1);
                 });
         }
         function createFilterFor(query) {
@@ -115,7 +115,7 @@
             var fileReader = new FileReader();
             fileReader.onload = function(event) {
                 var content = event.target.result;
-                self.editor.setValue(content);
+                self.editor.setValue(content, -1);
                 self.content = content;
             };
             fileReader.readAsText(file);
