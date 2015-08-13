@@ -8,7 +8,9 @@
         ]);
     function UploadsController(UploadsService, $log, $q, $timeout) {
         var self = this;
+        self.inputTimeout = null;
         self.inputUrl = null;
+        self.outputTimeout = null;
         self.outputUrl = null;
         self.inputLoading = true;
         self.outputLoading = true;
@@ -40,7 +42,10 @@
                             });
                 }
             } else {
-                $timeout(refreshUpload, 1000);
+                if (self.inputTimeout) {
+                    $timeout.cancel(self.inputTimeout);
+                }
+                self.inputTimeout = $timeout(refreshUpload, 1000);
             }
         }
 
@@ -57,7 +62,10 @@
                             });
                 }
             } else {
-                $timeout(refreshUpload, 1000);
+                if (self.outputTimeout) {
+                    $timeout.cancel(self.outputTimeout);
+                }
+                self.outputTimeout = $timeout(refreshUpload, 1000);
             }
         }
 
