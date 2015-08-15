@@ -80,7 +80,7 @@ class Upload(models.Model):
     )
 
     def __unicode__(self):
-        return "%s - %s - %s" % (self.uploads_owner, self.uploads_uuid, self.uploads_version)
+        return "%s - %s - %s" % (self.uploads_uuid, self.uploads_version, self.uploads_status)
 
     def get_raw(self):
         return u'%s' % (self.uploads_input_string)
