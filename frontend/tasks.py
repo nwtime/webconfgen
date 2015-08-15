@@ -18,8 +18,8 @@ def test(param):
     return 'The test task executed with argument "%s" ' % param
 
 
-@app.task()
-def parser_enqueue(id):
+@app.task(bind=True)
+def parser_enqueue(self, id):
     """
         This function is called with a valid id of an Upload object.
     """
@@ -28,6 +28,11 @@ def parser_enqueue(id):
     else:
         return "Called without argument"
 
-    if upload.uploads_status == "AW":
+    if upload.uploads_status == "AW" or upload.uploads_status == "RE" or upload.uploads_status == "ER":
         upload.uploads_input_file_url.save(str(upload.uploads_uuid) + ".in.conf", ContentFile(upload.uploads_input_string), True)
+        upload.uploads_status = "PR"
+        upload.save()
         return "Saved"
+
+    if upload.uploads_status == "PR":
+        return "Sliently failing because existing task processing is not complete : " + str(upload)
