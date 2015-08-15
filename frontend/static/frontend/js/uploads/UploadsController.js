@@ -3,10 +3,10 @@
     angular
         .module('uploads')
             .controller('UploadsController', [
-                'UploadsService', '$log', '$q', '$timeout',
+                'UploadsService', '$log', '$q', '$timeout', '$mdToast',
                 UploadsController
         ]);
-    function UploadsController(UploadsService, $log, $q, $timeout) {
+    function UploadsController(UploadsService, $log, $q, $timeout, $mdToast) {
         var self = this;
         self.inputTimeout = null;
         self.inputUrl = null;
@@ -16,6 +16,7 @@
         self.outputLoading = true;
         self.selectedTab = 1;
         self.fileRaw = fileRaw;
+        self.isToastShown = true;
         self.fileUpload = fileUpload;
         self.uuid = window.location.toString().split('/')[3];
 
@@ -24,12 +25,29 @@
                 .getUpload(self.uuid)
                     .then(function(response) {
                         self.upload = response.data;
-                        refreshInputFile();
-                        refreshOutputFile();
+                        checkRefreshInputFile();
+                        checkRefreshOutputFile();
                     });
         }
 
-        function refreshInputFile() {
+        function refreshInputFile(content) {
+            self.editorInput.setValue(content, -1);
+            self.inputLoading = false;
+        }
+
+        function refreshOutputFile(content) {
+            self.editorOutput.setValue(content, -1);
+            self.outputLoading = false;
+        }
+
+        function checkRefreshInputFile() {
+            if (self.upload.status == 'PR' && self.inputLoading === true) {
+                UploadsService
+                    .getInputFile(self.upload)
+                        .then(function(response) {
+                            refreshInputFile(response.data);
+                        });
+            }
             if (self.upload.input_file_url) {
                 if (self.upload.input_file_url != self.inputUrl) {
                     self.inputLoading = true;
@@ -37,8 +55,7 @@
                     UploadsService
                         .getInputFile(self.upload)
                             .then(function(response) {
-                                self.editorInput.setValue(response.data, -1);
-                                self.inputLoading = false;
+                                refreshInputFile(response.data);
                             });
                 }
             } else {
@@ -49,7 +66,7 @@
             }
         }
 
-        function refreshOutputFile() {
+        function checkRefreshOutputFile() {
             if (self.upload.output_file_url) {
                 if (self.upload.output_file_url != self.outputUrl) {
                     self.outputLoading = true;
@@ -57,8 +74,7 @@
                     UploadsService
                         .getOutputFile(self.upload)
                             .then(function(response) {
-                                self.editorOutput.setValue(response.data, -1);
-                                self.outputLoading = false;
+                                refreshOutputFile(response.data);
                             });
                 }
             } else {
@@ -89,10 +105,26 @@
             var url = URL.createObjectURL(blob);
             window.open(url, '_blank');
         }
+        function showToast(content) {
+            if (self.isToastShown === false) {
+                $mdToast.show(
+                    $mdToast.simple()
+                        .content(content)
+                        .position('top right')
+                        .theme('default')
+                );
+                self.isToastShown = true;
+            }
+        }
 
         function fileUpload() {
             self.inputLoading = true;
             var content = self.editorInput.getValue();
+            if (content === '') {
+                self.isToastShown = false;
+                showToast('No Content To Parse');
+                return;
+            }
             UploadsService
                 .updateContent(content, self.upload)
                     .then(function(response) {});
