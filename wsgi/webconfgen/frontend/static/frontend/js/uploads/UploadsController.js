@@ -41,12 +41,22 @@
         }
 
         function checkRefreshInputFile() {
+            if (self.upload.status === 'ER') {
+                self.inputLoading = false;
+                UploadsService
+                    .getInputFile(self.upload)
+                        .then(function(response) {
+                            refreshInputFile(response.data);
+                        });
+                return;
+            }
             if (self.upload.status == 'PR' && self.inputLoading === true) {
                 UploadsService
                     .getInputFile(self.upload)
                         .then(function(response) {
                             refreshInputFile(response.data);
                         });
+                return;
             }
             if (self.upload.input_file_url) {
                 if (self.upload.input_file_url != self.inputUrl) {
@@ -67,6 +77,19 @@
         }
 
         function checkRefreshOutputFile() {
+            if (self.upload.status === 'ER') {
+                self.outputLoading = false;
+                refreshOutputFile('Parser has failed. Try again later');
+                return;
+            }
+            if (self.upload.status === 'RE' && self.outputLoading === true) {
+                UploadsService
+                    .getOutputFile(self.upload)
+                        .then(function(response) {
+                            refreshOutputFile(response.data);
+                        });
+                return;
+            }
             if (self.upload.output_file_url) {
                 if (self.upload.output_file_url != self.outputUrl) {
                     self.outputLoading = true;
@@ -127,7 +150,9 @@
             }
             UploadsService
                 .updateContent(content, self.upload)
-                    .then(function(response) {});
+                    .then(function(response) {
+                        refreshUpload();
+                    });
         }
         angular.element(document).ready(loadEditor);
     };

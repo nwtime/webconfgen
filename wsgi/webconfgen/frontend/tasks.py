@@ -6,6 +6,8 @@ from .models import Upload
 from django.core.files.base import ContentFile
 
 from webconfgen.celery import app
+
+from backend.parser import Parser
 import logging
 logger = logging.getLogger(__name__)
 
@@ -28,11 +30,22 @@ def parser_enqueue(self, id):
     else:
         return "Called without argument"
 
-    if upload.uploads_status == "AW" or upload.uploads_status == "RE" or upload.uploads_status == "ER":
-        upload.uploads_input_file_url.save(str(upload.uploads_uuid) + ".in.conf", ContentFile(upload.uploads_input_string), True)
-        upload.uploads_status = "PR"
-        upload.save()
-        return "Saved"
-
     if upload.uploads_status == "PR":
         return "Sliently failing because existing task processing is not complete : " + str(upload)
+
+    upload.uploads_input_file_url.save(str(upload.uploads_uuid) + ".in.conf", ContentFile(upload.uploads_input_string), True)
+    upload.uploads_status = "PR"
+    upload.save()
+
+    try:
+        parser = Parser(upload.uploads_input_file_url)
+        output = parser.parse()
+        upload.uploads_output_file_url.save(str(upload.uploads_uuid) + ".out.conf", ContentFile(output), True)
+        upload.uploads_status = "RE"
+        upload.save()
+    except Exception as e:
+        upload.uploads_status = "ER"
+        upload.save()
+        return "Failed : " + str(e)
+
+    return "Sucessfully parsed " + str(upload)
