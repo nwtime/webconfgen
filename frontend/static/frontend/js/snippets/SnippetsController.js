@@ -111,7 +111,6 @@
         }
         function fileImport(element) {
             var file = element.files[0];
-            self.selectedTab = 1;
             var fileReader = new FileReader();
             fileReader.onload = function(event) {
                 var content = event.target.result;
