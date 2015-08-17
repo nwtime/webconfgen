@@ -49,6 +49,7 @@ class Upload(models.Model):
     """
     uploads_owner = models.ForeignKey(
         'auth.user',
+        null=True,
     )
     uploads_timestamp = models.DateTimeField(
         auto_now_add=True,
@@ -100,6 +101,7 @@ class Snippet(models.Model):
     snippets_file_text = models.TextField()
     snippets_owner = models.ForeignKey(
         'auth.user',
+        null=True,
     )
     snippets_timestamp = models.DateTimeField(
         auto_now_add=True,
