@@ -1,12 +1,15 @@
-from rest_framework import viewsets, permissions, renderers
-from rest_framework.response import Response
-from rest_framework.decorators import detail_route, list_route
-from .models import Snippet, Upload, Version
-from .serializers import UserSerializer, UploadSerializer, SnippetSerializer, VersionSerializer, SnippetAllSerializer, UploadMiniSerializer
-from .permissions import IsOwnerOrAnonOrReadOnly
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
+from rest_framework import permissions, renderers, viewsets
+from rest_framework.decorators import detail_route, list_route
+from rest_framework.response import Response
+
+from .models import Snippet, Upload, Version
+from .permissions import IsOwnerOrAnonOrReadOnly
+from .serializers import (SnippetAllSerializer, SnippetSerializer,
+                          UploadMiniSerializer, UploadSerializer,
+                          UserSerializer, VersionSerializer)
 from .tasks import parser_enqueue
 
 

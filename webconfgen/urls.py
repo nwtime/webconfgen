@@ -1,10 +1,10 @@
-from frontend import views
 from django.conf import settings
-from django.conf.urls import patterns, url, include
+from django.conf.urls import include, patterns, url
 from django.conf.urls.static import static
-from rest_framework.routers import DefaultRouter
 from django.contrib import admin
+from rest_framework.routers import DefaultRouter
 
+from frontend import views
 
 router = DefaultRouter()
 router.register(r'snippets', views.SnippetViewSet)

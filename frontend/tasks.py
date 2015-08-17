@@ -1,14 +1,15 @@
 from __future__ import absolute_import
 
-from celery import shared_task
-from .models import Upload
+import logging
 
+from celery import shared_task
 from django.core.files.base import ContentFile
 
+from backend.parser import Parser
 from webconfgen.celery import app
 
-from backend.parser import Parser
-import logging
+from .models import Upload
+
 logger = logging.getLogger(__name__)
 
 

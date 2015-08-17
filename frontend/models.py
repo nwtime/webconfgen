@@ -5,9 +5,10 @@
 """
 
 
-from django.db import models
-from uuid import uuid4
 from textwrap import TextWrapper
+from uuid import uuid4
+
+from django.db import models
 
 # Create your models here.
 
