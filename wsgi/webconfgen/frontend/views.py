@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import detail_route, list_route
 from .models import Snippet, Upload, Version
 from .serializers import UserSerializer, UploadSerializer, SnippetSerializer, VersionSerializer, SnippetAllSerializer, UploadMiniSerializer
+from .permissions import IsOwnerOrAnonOrReadOnly
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
@@ -82,12 +83,16 @@ class UploadViewSet(viewsets.ModelViewSet):
     queryset = Upload.objects.all()
     serializer_class = UploadSerializer
     permission_classes = (
-        permissions.DjangoModelPermissionsOrAnonReadOnly,
+        IsOwnerOrAnonOrReadOnly,
     )
     lookup_field = 'uploads_uuid'
 
     def perform_create(self, serializer):
-        upload = serializer.save(uploads_owner=self.request.user)
+        if self.request.user.is_authenticated():
+            owner = self.request.user
+        else:
+            owner = None
+        upload = serializer.save(uploads_owner=owner)
         parser_enqueue.delay(upload.id)
 
     def perform_update(self, serializer):
