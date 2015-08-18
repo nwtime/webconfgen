@@ -39,7 +39,7 @@ def parser_enqueue(self, id):
     upload.save()
 
     try:
-        parser = Parser(upload.uploads_input_file_url)
+        parser = Parser(upload.uploads_input_file_url.file.file)
         output = parser.parse()
         upload.uploads_output_file_url.save(str(upload.uploads_uuid) + ".out.conf", ContentFile(output), True)
         upload.uploads_status = "RE"
