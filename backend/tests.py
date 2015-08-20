@@ -1,3 +1,4 @@
-from  import TestCase
+from unittest import TestCase, main
 
-# Create your tests here.
+if __name__ == '__main__':
+    main()
