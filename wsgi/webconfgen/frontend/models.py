@@ -87,10 +87,18 @@ class Upload(models.Model):
     def get_raw(self):
         return u'%s' % (self.uploads_input_string)
 
+    def save(self, *args, **kwargs):
+        """
+            Overriding save to edit the model when a new object is edited
+        """
+        if self.uploads_status != 'PR':
+            self.uploads_status = 'AW'
+        super(Upload, self).save(*args, **kwargs)
+
 
 class Snippet(models.Model):
     """
-
+        Contains snippets which can be used to generate an ntp.conf
     """
     snippets_name = models.CharField(
         max_length=255,
