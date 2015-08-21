@@ -1,7 +1,9 @@
 """
     The DB layer for frontend models.
 
-    Uploads class contains the flies uploaded by user to full parse.
+    Upload class contains the files uploaded by user to full parse.
+    Snippet class contains the snippets used for the generation of ntp.conf.
+    Version is an abstration for a version.
 """
 
 
@@ -38,9 +40,17 @@ class Version(models.Model):
     )
 
     def __unicode__(self):
+        """
+            Covert to unicode string.
+        """
         return u'%s ' % (self.versions_version)
 
     def convert_to_list(self):
+        """
+            Converts to a list of split by major and minor version.
+
+            Assumes delimiter to be '.'
+        """
         return self.versions_version.split('.')
 
 
@@ -82,9 +92,15 @@ class Upload(models.Model):
     )
 
     def __unicode__(self):
+        """
+            Converts to unicode string.
+        """
         return "%s - %s - %s" % (self.uploads_uuid, self.uploads_version, self.uploads_status)
 
     def get_raw(self):
+        """
+            Returns a raw representation of an upload.
+        """
         return u'%s' % (self.uploads_input_string)
 
     def save(self, *args, **kwargs):
@@ -132,7 +148,13 @@ class Snippet(models.Model):
     )
 
     def __unicode__(self):
+        """
+            Converts to unicode string.
+        """
         return u'%s' % (self.snippets_name)
 
     def get_raw(self):
+        """
+            Returns a raw representation of a snippet
+        """
         return u'%s\n%s' % (COMMENT_TEXT_WRAPPER.fill(self.snippets_helper_text), self.snippets_file_text)

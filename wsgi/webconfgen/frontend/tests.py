@@ -1,10 +1,17 @@
+"""
+Django unit tests for webconfgen
+"""
+
+
 from django.test import TestCase
-from .models import Upload, Snippet, Version
 
-# Create your tests here.
+from .models import Snippet, Upload, Version
 
 
-class SanityCheck(TestCase):
+class SanityCheckTest(TestCase):
+    """
+        A series of sanity checks.
+    """
     def test_object_creation(self):
         """
             Tests for sane creation of objectss

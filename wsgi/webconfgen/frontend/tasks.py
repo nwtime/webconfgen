@@ -1,3 +1,9 @@
+"""
+The celery task queue functions for the
+webconfgen project.
+"""
+
+
 from __future__ import absolute_import
 
 import logging
@@ -22,12 +28,18 @@ def test(param):
 
 
 @app.task(bind=True)
-def parser_enqueue(self, id):
+def parser_enqueue(self, database_key):
     """
         This function is called with a valid id of an Upload object.
+        This handles the parsing for the upload objects that come in.
+
+        This function assumes that the upload object is not deleted
+        until the task processing is complete.
+
+        A task with uploads_status = "PR" is silently failed.
     """
-    if id:
-        upload = Upload.objects.filter(pk=id)[0]
+    if database_key:
+        upload = Upload.objects.filter(pk=database_key)[0]
     else:
         return "Called without argument"
 
