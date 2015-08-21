@@ -1,3 +1,8 @@
+"""
+The serializers module provides a standered method to convert
+the various models into XML, JSON, or formats.
+"""
+
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
@@ -5,12 +10,18 @@ from .models import Snippet, Upload, Version
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """
+        A class for serializing Users.
+    """
     class Meta:
         model = User
         fields = ('url', 'username', 'email')
 
 
 class VersionSerializer(serializers.ModelSerializer):
+    """
+        A class for serializing Versions
+    """
     version = serializers.CharField(
         source='versions_version',
     )
@@ -21,6 +32,9 @@ class VersionSerializer(serializers.ModelSerializer):
 
 
 class UploadSerializer(serializers.ModelSerializer):
+    """
+        A class for serializing Uploads
+    """
     owner = serializers.HyperlinkedRelatedField(
         source='uploads_owner',
         view_name='user-detail',
@@ -60,6 +74,11 @@ class UploadSerializer(serializers.ModelSerializer):
 
 
 class UploadMiniSerializer(serializers.ModelSerializer):
+    """
+        A class for serializing Mini Uploads.
+
+        Mini uploads have reduced fields for smaller footprint.
+    """
     version = serializers.SlugRelatedField(
         slug_field='versions_version',
         source='uploads_version',
@@ -90,37 +109,10 @@ class UploadMiniSerializer(serializers.ModelSerializer):
         lookup_field = 'uploads_uuid'
 
 
-class SnippetAllSerializer(serializers.ModelSerializer):
-    description = serializers.CharField(
-        source='snippets_description',
-    )
-    version = serializers.SlugRelatedField(
-        slug_field='versions_version',
-        source='snippets_version',
-        many=True,
-        queryset=Version.objects.all(),
-    )
-    mutually_exclusive = serializers.SlugRelatedField(
-        slug_field='snippets_uuid',
-        source='snippets_mutually_exclusive',
-        many=True,
-        queryset=Snippet.objects.all(),
-    )
-    name = serializers.CharField(
-        source='snippets_name',
-    )
-    uuid = serializers.UUIDField(
-        source='snippets_uuid',
-        read_only=True,
-    )
-
-    class Meta:
-        model = Snippet
-        lookup_field = 'snippets_uuid'
-        fields = ('name', 'description', 'version', 'url', 'mutually_exclusive', 'uuid')
-
-
 class SnippetSerializer(serializers.ModelSerializer):
+    """
+        A class for serializing Snippets
+    """
     owner = serializers.HyperlinkedRelatedField(
         source='snippets_owner',
         view_name='user-detail',
@@ -159,3 +151,39 @@ class SnippetSerializer(serializers.ModelSerializer):
         model = Snippet
         lookup_field = 'snippets_uuid'
         fields = ('name', 'file_text', 'mutually_exclusive', 'version', 'helper_text', 'url', 'owner', 'description', 'uuid')
+
+
+class SnippetMiniSerializer(serializers.ModelSerializer):
+    """
+        A class for serializing Snippets
+
+        Mini snippets have reduced fields for a smaller
+        footprint.
+    """
+    description = serializers.CharField(
+        source='snippets_description',
+    )
+    version = serializers.SlugRelatedField(
+        slug_field='versions_version',
+        source='snippets_version',
+        many=True,
+        queryset=Version.objects.all(),
+    )
+    mutually_exclusive = serializers.SlugRelatedField(
+        slug_field='snippets_uuid',
+        source='snippets_mutually_exclusive',
+        many=True,
+        queryset=Snippet.objects.all(),
+    )
+    name = serializers.CharField(
+        source='snippets_name',
+    )
+    uuid = serializers.UUIDField(
+        source='snippets_uuid',
+        read_only=True,
+    )
+
+    class Meta:
+        model = Snippet
+        lookup_field = 'snippets_uuid'
+        fields = ('name', 'description', 'version', 'url', 'mutually_exclusive', 'uuid')

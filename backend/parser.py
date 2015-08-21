@@ -1,14 +1,31 @@
-from .line_parsers import LINE_PARSERS
+"""
+Implements a Parser for the calling of LINE_PARSERS, FILE_PARSERS and SANITY_CHECKERS functions.
+
+TODO: Add version based parsing.
+"""
+
+
 from .file_parsers import FILE_PARSERS
+from .line_parsers import LINE_PARSERS
 from .sanity_checkers import SANITY_CHECKERS
 
 
 class Parser(object):
+    """
+        A parser class which takes the input_file as the input and parses it
+        in accordence with the LINE_PARSERS and FILE_PARSERS.
+    """
     def __init__(self, input_file):
+        """
+        TODO: Add version based parsing.
+        """
         self.input_file = input_file
         object.__init__(self)
 
     def sanity_check(self):
+        """
+            Performs a sanity check on the file.
+        """
         for function in SANITY_CHECKERS:
             self.input_file.seek(0)
             if not function(self.input_file):
@@ -17,6 +34,10 @@ class Parser(object):
         return True
 
     def parse(self):
+        """
+            Parses based on the input, and returns
+            a string output.
+        """
         if not self.sanity_check():
             return "File is Insane!"
 

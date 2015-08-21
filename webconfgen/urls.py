@@ -1,3 +1,12 @@
+"""
+The url.py file is defined in the settings.py to be the root urlconf.
+
+This means that the urls to be rendered will be mapped to functions
+in this file, or they may alternatively also be redirected to other
+apps from here.
+"""
+
+
 from django.conf import settings
 from django.conf.urls import include, patterns, url
 from django.conf.urls.static import static
