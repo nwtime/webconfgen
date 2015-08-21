@@ -1,1 +1,9 @@
 #!/bin/bash
+
+source ${OPENSHIFT_PYTHON_DIR}/virtenv/bin/activate
+
+echo "Executing 'cd $OPENSHIFT_REPO_DIR/wsgi/webconfgen/'"
+cd "$OPENSHIFT_REPO_DIR/wsgi/webconfgen/"
+
+echo "Executing 'celery multi stopwait node1 node2 -A webconfgen -l info --pidfile=$OPENSHIFT_PYTHON_DIR/run/%n.pid --logfile=$OPENSHIFT_LOG_DIR/%n-%I.log'"
+celery multi stopwait node1 node2 -A webconfgen -l info --pidfile=$OPENSHIFT_PYTHON_DIR/run/%n.pid --logfile=$OPENSHIFT_LOG_DIR/%n-%I.log
