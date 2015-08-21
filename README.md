@@ -34,6 +34,5 @@ Celery Notes
 To start celery, you need to run the following
 
 ```
-python manage.py celeryd -E 
-python manage.py celerycam
+celery -l info -A webconfgen
 ```
